@@ -1,9 +1,8 @@
 package device
 
 import (
-	"bufio"
 	"fmt"
-	"io"
+	"regexp"
 	"sync"
 	"time"
 
@@ -82,55 +81,32 @@ func (dev *arduino) executeStatusCommand(com command.Command) (st response.Statu
 }
 
 func (dev *arduino) executeCommand(com string) (resp string, err error) {
-	_, err = asyncWrite(dev.port, []byte(com))
-	if err != nil {
-		return
-	}
-	resp, err = asyncRead(bufio.NewReader(dev.port), '\n')
-	return
-}
-
-func asyncWrite(writer io.Writer, b []byte) (nn int, err error) {
-	wr := make(chan writeResult)
+	result := make(chan readResult)
 	go func() {
-		n, e := writer.Write(b)
-		wr <- writeResult{n, e}
+		_, e := dev.port.Write([]byte(com))
+		if e != nil {
+			result <- readResult{"", e}
+			return
+		}
+		b := make([]byte, 10, 10)
+		_, e = dev.port.Read(b)
+		s := string(b)
+		re := regexp.MustCompile("(.+)\n")
+		rs := re.FindAllStringSubmatch(s, -1)
+		result <- readResult{rs[0][0], e}
 	}()
 	for {
 		select {
-		case receive := <-wr:
-			nn = receive.nn
+		case receive := <-result:
+			resp = receive.str
 			err = receive.err
 			return
 		case <-time.After(timeoutDuration):
-			err = fmt.Errorf("write timeout for %d second", timeoutDuration/time.Second)
+			err = fmt.Errorf("connection timeout for %d second", timeoutDuration/time.Second)
+			close(result)
 			return
 		}
 	}
-}
-
-func asyncRead(reader *bufio.Reader, delim byte) (str string, err error) {
-	rr := make(chan readResult)
-	go func() {
-		s, e := reader.ReadString(delim)
-		rr <- readResult{s, e}
-	}()
-	for {
-		select {
-		case receive := <-rr:
-			str = receive.str
-			err = receive.err
-			return
-		case <-time.After(timeoutDuration):
-			err = fmt.Errorf("read timeout for %d second", timeoutDuration/time.Second)
-			return
-		}
-	}
-}
-
-type writeResult struct {
-	nn  int
-	err error
 }
 
 type readResult struct {

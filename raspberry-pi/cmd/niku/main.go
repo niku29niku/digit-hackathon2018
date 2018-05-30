@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	d, err := device.GetDevice("/dev/tty.usbmodem72", 38400)
+	d, err := device.GetDevice("/dev/tty.usbmodem77", 38400)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "failed get device : %s\n", err.Error())
 		os.Exit(1)

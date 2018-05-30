@@ -72,7 +72,7 @@ func Test_FaildConnection(t *testing.T) {
 		})
 		device := &arduino{mockSerial, commander.NewCommander(), response.NewParser()}
 		_, err := device.Start()
-		assert.Equal(t, err.Error(), "write timeout for 5 second")
+		assert.Equal(t, err.Error(), "connection timeout for 5 second")
 	})
 	t.Run("shoud get error when read timeout", func(t *testing.T) {
 		ctlr := gomock.NewController(t)
@@ -85,6 +85,6 @@ func Test_FaildConnection(t *testing.T) {
 		})
 		device := &arduino{mockSerial, commander.NewCommander(), response.NewParser()}
 		_, err := device.Start()
-		assert.Equal(t, err.Error(), "read timeout for 5 second")
+		assert.Equal(t, err.Error(), "connection timeout for 5 second")
 	})
 }

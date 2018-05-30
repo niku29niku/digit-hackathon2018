@@ -15,7 +15,7 @@ type commanderImpl struct {
 }
 
 func (c *commanderImpl) CommandToString(com command.Command) string {
-	str := fmt.Sprintf("%s:%s", com.Name(), com.Value())
+	str := fmt.Sprintf("%s:%s\r\n", com.Name(), com.Value())
 	return str
 }
 

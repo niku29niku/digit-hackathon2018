@@ -13,6 +13,6 @@ func Test_ToString(t *testing.T) {
 	com := command.Temperature(55.5)
 	commander := NewCommander()
 	expected := commander.CommandToString(com)
-	actual := "C:55.5"
+	actual := "C:55.5\r\n"
 	assert.Equal(t, expected, actual)
 }
