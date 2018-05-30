@@ -1,6 +1,7 @@
 package device
 
 import (
+	"fmt"
 	"math"
 	"testing"
 	"time"
@@ -12,11 +13,11 @@ import (
 )
 
 func Test_StatusCommand(t *testing.T) {
-	ctlr := gomock.NewController(t)
-	defer ctlr.Finish()
-	mockSerial := NewMockPort(ctlr)
-	mockSerial.EXPECT().Write(gomock.Any()).Return(0, nil).MaxTimes(math.MaxInt64)
 	t.Run("should get Ok when return ok status", func(t *testing.T) {
+		ctlr := gomock.NewController(t)
+		defer ctlr.Finish()
+		mockSerial := NewMockPort(ctlr)
+		mockSerial.EXPECT().Write(gomock.Any()).Return(0, nil).MaxTimes(math.MaxInt64)
 		mockSerial.EXPECT().Read(gomock.Any()).DoAndReturn(func(p []byte) (int, error) {
 			p[0] = 'O'
 			p[1] = 'K'
@@ -31,6 +32,10 @@ func Test_StatusCommand(t *testing.T) {
 		assert.Nil(t, err)
 	})
 	t.Run("should get Ng when return ng status", func(t *testing.T) {
+		ctlr := gomock.NewController(t)
+		defer ctlr.Finish()
+		mockSerial := NewMockPort(ctlr)
+		mockSerial.EXPECT().Write(gomock.Any()).Return(0, nil).MaxTimes(math.MaxInt64)
 		mockSerial.EXPECT().Read(gomock.Any()).DoAndReturn(func(p []byte) (int, error) {
 			p[0] = 'N'
 			p[1] = 'G'
@@ -68,7 +73,7 @@ func Test_FaildConnection(t *testing.T) {
 		mockSerial := NewMockPort(ctlr)
 		mockSerial.EXPECT().Write(gomock.Any()).DoAndReturn(func(p []byte) (int, error) {
 			time.Sleep(10 * time.Second)
-			return len(p), nil
+			return 0, fmt.Errorf("failed")
 		})
 		device := &arduino{mockSerial, commander.NewCommander(), response.NewParser()}
 		_, err := device.Start()
@@ -81,7 +86,7 @@ func Test_FaildConnection(t *testing.T) {
 		mockSerial.EXPECT().Write(gomock.Any()).Return(0, nil).MaxTimes(math.MaxInt64)
 		mockSerial.EXPECT().Read(gomock.Any()).DoAndReturn(func(p []byte) (int, error) {
 			time.Sleep(10 * time.Second)
-			return 0, nil
+			return 0, fmt.Errorf("failed")
 		})
 		device := &arduino{mockSerial, commander.NewCommander(), response.NewParser()}
 		_, err := device.Start()

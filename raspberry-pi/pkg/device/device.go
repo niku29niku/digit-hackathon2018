@@ -103,7 +103,6 @@ func (dev *arduino) executeCommand(com string) (resp string, err error) {
 			return
 		case <-time.After(timeoutDuration):
 			err = fmt.Errorf("connection timeout for %d second", timeoutDuration/time.Second)
-			close(result)
 			return
 		}
 	}
