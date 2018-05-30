@@ -8,9 +8,9 @@ import (
 	"time"
 
 	"github.com/goburrow/serial"
-	"github.com/numa08/digit-hackathon2018/raspberry-pi/pkg/command"
-	"github.com/numa08/digit-hackathon2018/raspberry-pi/pkg/commander"
-	"github.com/numa08/digit-hackathon2018/raspberry-pi/pkg/response"
+	"github.com/niku29niku/digit-hackathon2018/raspberry-pi/pkg/command"
+	"github.com/niku29niku/digit-hackathon2018/raspberry-pi/pkg/commander"
+	"github.com/niku29niku/digit-hackathon2018/raspberry-pi/pkg/response"
 )
 
 // Device is serial connection device

@@ -3,8 +3,8 @@ package cooker
 import (
 	"fmt"
 
-	"github.com/numa08/digit-hackathon2018/raspberry-pi/pkg/device"
-	"github.com/numa08/digit-hackathon2018/raspberry-pi/pkg/response"
+	"github.com/niku29niku/digit-hackathon2018/raspberry-pi/pkg/device"
+	"github.com/niku29niku/digit-hackathon2018/raspberry-pi/pkg/response"
 )
 
 type roastbeefCooker struct {

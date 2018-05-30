@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/golang/mock/gomock"
-	"github.com/numa08/digit-hackathon2018/raspberry-pi/pkg/commander"
-	"github.com/numa08/digit-hackathon2018/raspberry-pi/pkg/response"
+	"github.com/niku29niku/digit-hackathon2018/raspberry-pi/pkg/commander"
+	"github.com/niku29niku/digit-hackathon2018/raspberry-pi/pkg/response"
 	"github.com/stretchr/testify/assert"
 )
 

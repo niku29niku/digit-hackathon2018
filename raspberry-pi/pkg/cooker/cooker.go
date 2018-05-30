@@ -1,6 +1,6 @@
 package cooker
 
-import "github.com/numa08/digit-hackathon2018/raspberry-pi/pkg/device"
+import "github.com/niku29niku/digit-hackathon2018/raspberry-pi/pkg/device"
 
 // Cooker cook
 type Cooker interface {
