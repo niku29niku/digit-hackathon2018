@@ -3,7 +3,7 @@ package commander
 import (
 	"testing"
 
-	"github.com/numa08/digit-hackathon/pkg/command"
+	"github.com/numa08/digit-hackathon2018/raspberry-pi/pkg/command"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -7,12 +7,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/numa08/digit-hackathon/pkg/response"
-
 	"github.com/goburrow/serial"
-
-	"github.com/numa08/digit-hackathon/pkg/command"
-	"github.com/numa08/digit-hackathon/pkg/commander"
+	"github.com/numa08/digit-hackathon2018/raspberry-pi/pkg/command"
+	"github.com/numa08/digit-hackathon2018/raspberry-pi/pkg/commander"
+	"github.com/numa08/digit-hackathon2018/raspberry-pi/pkg/response"
 )
 
 // Device is serial connection device

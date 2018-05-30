@@ -5,12 +5,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/assert"
-
-	"github.com/numa08/digit-hackathon/pkg/commander"
-	"github.com/numa08/digit-hackathon/pkg/response"
-
 	"github.com/golang/mock/gomock"
+	"github.com/numa08/digit-hackathon2018/raspberry-pi/pkg/commander"
+	"github.com/numa08/digit-hackathon2018/raspberry-pi/pkg/response"
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_StatusCommand(t *testing.T) {

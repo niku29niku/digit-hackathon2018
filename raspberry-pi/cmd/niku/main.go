@@ -5,9 +5,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/numa08/digit-hackathon/pkg/device"
-
-	"github.com/numa08/digit-hackathon/pkg/cooker"
+	"github.com/numa08/digit-hackathon2018/raspberry-pi/pkg/cooker"
+	"github.com/numa08/digit-hackathon2018/raspberry-pi/pkg/device"
 )
 
 func main() {

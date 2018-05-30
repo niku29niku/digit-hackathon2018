@@ -3,7 +3,7 @@ package commander
 import (
 	"fmt"
 
-	"github.com/numa08/digit-hackathon/pkg/command"
+	"github.com/numa08/digit-hackathon2018/raspberry-pi/pkg/command"
 )
 
 // Commander is module of convert Command to string

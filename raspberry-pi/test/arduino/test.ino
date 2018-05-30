@@ -6,11 +6,6 @@ void setup()
 char incomingByte = 0; // for incoming serial data
 String readString = "";
 
-int onGetCommand(String commandLine)
-{
-  return 0;
-}
-
 void loop()
 {
 
@@ -22,12 +17,7 @@ void loop()
     readString += incomingByte;
     if (incomingByte == '\n')
     {
-      int result = onGetCommand(readString);
-      if (result == 0) {
-        Serial.println("OK");
-      } else {
-        Serial.println("NG");
-      }
+      Serial.println("OK");
       readString = "";
     }
   }
