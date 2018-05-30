@@ -13,38 +13,23 @@ type roastbeefCooker struct {
 }
 
 func (ck *roastbeefCooker) Cook(device device.Device) (err error) {
-	var status response.Status
-	status, err = device.IsReady()
-	if err != nil {
-		return
+	serial := func(f func() (response.Status, error), msg string) (st response.Status) {
+		if err != nil {
+			return
+		}
+		st, err = f()
+		if err != nil {
+			return
+		}
+		if st != response.Ok {
+			err = fmt.Errorf(msg)
+			return
+		}
+		return st
 	}
-	if status != response.Ok {
-		err = fmt.Errorf("device is not ready")
-		return
-	}
-	status, err = device.SetTemperature(ck.temperture)
-	if err != nil {
-		return
-	}
-	if status != response.Ok {
-		err = fmt.Errorf("failed set temperature")
-		return
-	}
-	status, err = device.SetDuration(ck.duration)
-	if err != nil {
-		return
-	}
-	if status != response.Ok {
-		err = fmt.Errorf("failed set duration")
-		return
-	}
-	status, err = device.Start()
-	if err != nil {
-		return
-	}
-	if status != response.Ok {
-		err = fmt.Errorf("failed start")
-		return
-	}
-	return nil
+	_ = serial(func() (response.Status, error) { return device.IsReady() }, "device is not ready")
+	_ = serial(func() (response.Status, error) { return device.SetTemperature(ck.temperture) }, "failed set temperature")
+	_ = serial(func() (response.Status, error) { return device.SetDuration(ck.duration) }, "failed set duration")
+	_ = serial(func() (response.Status, error) { return device.Start() }, "failed start")
+	return
 }
