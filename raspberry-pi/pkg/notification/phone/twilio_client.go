@@ -2,6 +2,7 @@ package phone
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/niku29niku/digit-hackathon2018/raspberry-pi/pkg/notification/phone/twilio"
 )
@@ -25,13 +26,22 @@ func (t *twilioClient) call(tos []string) []error {
 				channel <- fmt.Errorf("%s, error: %s", toNum, e.Error())
 				return
 			}
-			e = t.Twilio.Call(num)
-			if e != nil {
-				channel <- fmt.Errorf("%s, error: %s", toNum, e.Error())
-				return
+			c := make(chan error)
+			go func(n string) {
+				c <- t.Twilio.Call(n)
+			}(num)
+			for {
+				select {
+				case receive := <-c:
+					if receive != nil {
+						e = fmt.Errorf("%s, error: %s", toNum, receive.Error())
+					}
+					channel <- e
+				case <-time.After(5 * time.Second):
+					e = fmt.Errorf("%s, error: twilio timeout", toNum)
+					channel <- e
+				}
 			}
-			channel <- nil
-			return
 		}(to)
 	}
 	errors := make([]error, 0)

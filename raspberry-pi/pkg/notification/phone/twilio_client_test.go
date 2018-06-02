@@ -3,6 +3,7 @@ package phone
 import (
 	"fmt"
 	"testing"
+	"time"
 
 	"github.com/niku29niku/digit-hackathon2018/raspberry-pi/pkg/notification/phone/twilio"
 	"github.com/stretchr/testify/assert"
@@ -71,5 +72,32 @@ func Test_Notification(t *testing.T) {
 		errors := client.Notification(numbers)
 		assert.Equal(t, 1, len(errors))
 		assert.Equal(t, "080-4972-271, error: twilio failed", errors[0].Error())
+	})
+	t.Run("should get one error when twilio timeout", func(t *testing.T) {
+		ctlr := gomock.NewController(t)
+		defer ctlr.Finish()
+		mockTwilio := twilio.NewMockTwilio(ctlr)
+		mockTwilio.EXPECT().Call(gomock.Any()).DoAndReturn(func(num string) error {
+			if num == "+81804972271" {
+				time.Sleep(10 * time.Second)
+				return nil
+			} else {
+				return nil
+			}
+		}).Times(3)
+
+		numbers := []string{
+			"080-4972-271",
+			"080-9962-9297",
+			"080-9852-2523",
+		}
+
+		client := twilioClient{
+			Twilio:       mockTwilio,
+			NumberParser: NewParser(),
+		}
+		errors := client.Notification(numbers)
+		assert.Equal(t, 1, len(errors))
+		assert.Equal(t, "080-4972-271, error: twilio timeout", errors[0].Error())
 	})
 }
