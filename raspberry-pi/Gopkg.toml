@@ -50,5 +50,9 @@
   version = "0.3.0"
 
 [[constraint]]
-  name = "github.com/carlosdp/twiliogo"
-  version = "0.1.0"
+  branch = "master"
+  name = "github.com/sfreiberg/gotwilio"
+
+[[constraint]]
+  name = "github.com/nyaruka/phonenumbers"
+  version = "1.0.20"
