@@ -78,12 +78,8 @@ func Test_Notification(t *testing.T) {
 		defer ctlr.Finish()
 		mockTwilio := twilio.NewMockTwilio(ctlr)
 		mockTwilio.EXPECT().Call(gomock.Any()).DoAndReturn(func(num string) error {
-			if num == "+81804972271" {
-				time.Sleep(10 * time.Second)
-				return nil
-			} else {
-				return nil
-			}
+			time.Sleep(10 * time.Second)
+			return nil
 		}).Times(3)
 
 		numbers := []string{
@@ -97,7 +93,6 @@ func Test_Notification(t *testing.T) {
 			NumberParser: NewParser(),
 		}
 		errors := client.Notification(numbers)
-		assert.Equal(t, 1, len(errors))
-		assert.Equal(t, "080-4972-271, error: twilio timeout", errors[0].Error())
+		assert.Equal(t, 3, len(errors))
 	})
 }
