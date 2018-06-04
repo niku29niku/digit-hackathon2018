@@ -34,7 +34,15 @@ type twilioImpl struct {
 func (t *twilioImpl) Call(to string) error {
 	_, exp, err := t.twilioClient.CallWithUrlCallbacks(t.fromNumber, to, t.callbackParams)
 	if exp != nil || err != nil {
-		return fmt.Errorf("exception: %s, error: %s", exp.Message, err.Error())
+		expMessage := ""
+		if exp != nil {
+			expMessage = exp.Message
+		}
+		errMessage := ""
+		if err != nil {
+			errMessage = err.Error()
+		}
+		return fmt.Errorf("Twilio:Call exception: %s, error: %s", expMessage, errMessage)
 	}
 	return nil
 }
