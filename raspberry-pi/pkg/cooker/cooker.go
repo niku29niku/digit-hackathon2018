@@ -1,6 +1,9 @@
 package cooker
 
-import "github.com/niku29niku/digit-hackathon2018/raspberry-pi/pkg/device"
+import (
+	"github.com/niku29niku/digit-hackathon2018/raspberry-pi/pkg/config"
+	"github.com/niku29niku/digit-hackathon2018/raspberry-pi/pkg/device"
+)
 
 // Cooker cook
 type Cooker interface {
@@ -8,9 +11,9 @@ type Cooker interface {
 }
 
 // NewRoastbeefCooker create new cooker instance for roastbeef
-func NewRoastbeefCooker(temperture float64, duration int) Cooker {
+func NewRoastbeefCooker(config config.CookerConfig) Cooker {
 	return &roastbeefCooker{
-		duration:   duration,
-		temperture: temperture,
+		duration:   config.Duration,
+		temperture: config.Temperture,
 	}
 }

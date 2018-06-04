@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"time"
 
 	"github.com/niku29niku/digit-hackathon2018/raspberry-pi/pkg/config"
 	"github.com/niku29niku/digit-hackathon2018/raspberry-pi/pkg/cooker"
@@ -17,13 +16,12 @@ func main() {
 		fmt.Fprintf(os.Stderr, "Configuration error: %s \n", err.Error())
 		os.Exit(1)
 	}
-	cookerDevice, err := device.GetDevice(configuration.Device.DeviceName, configuration.Device.BaudRate)
+	cookerDevice, err := device.GetDevice(configuration.Device)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Cookerdevice error: %s \n", err.Error())
 		os.Exit(1)
 	}
-	duration := int(2 * time.Hour / time.Second)
-	ck := cooker.NewRoastbeefCooker(55.5, duration)
+	ck := cooker.NewRoastbeefCooker(configuration.Cooker)
 	err = ck.Cook(cookerDevice)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Cooker error: %s \n", err.Error())

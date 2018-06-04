@@ -9,6 +9,7 @@ import (
 	"github.com/goburrow/serial"
 	"github.com/niku29niku/digit-hackathon2018/raspberry-pi/pkg/command"
 	"github.com/niku29niku/digit-hackathon2018/raspberry-pi/pkg/commander"
+	"github.com/niku29niku/digit-hackathon2018/raspberry-pi/pkg/config"
 	"github.com/niku29niku/digit-hackathon2018/raspberry-pi/pkg/response"
 )
 
@@ -32,9 +33,9 @@ var once sync.Once
 const timeoutDuration = 5 * time.Second
 
 // GetDevice get Device instance
-func GetDevice(address string, baudRate int) (dev Device, err error) {
+func GetDevice(config config.DeviceConfig) (dev Device, err error) {
 	once.Do(func() {
-		config := &serial.Config{Address: address, BaudRate: baudRate}
+		config := &serial.Config{Address: config.DeviceName, BaudRate: config.BaudRate}
 		port, e := serial.Open(config)
 		if e != nil {
 			err = e

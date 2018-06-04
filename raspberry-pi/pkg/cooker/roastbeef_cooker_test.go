@@ -3,11 +3,11 @@ package cooker
 import (
 	"fmt"
 	"testing"
-	"time"
 
 	"github.com/stretchr/testify/assert"
 
 	"github.com/golang/mock/gomock"
+	"github.com/niku29niku/digit-hackathon2018/raspberry-pi/pkg/config"
 	"github.com/niku29niku/digit-hackathon2018/raspberry-pi/pkg/response"
 )
 
@@ -21,7 +21,11 @@ func Test_Cook(t *testing.T) {
 		mockDevice.EXPECT().SetDuration(gomock.Any()).Return(response.Ok, nil)
 		mockDevice.EXPECT().Start().Return(response.Ok, nil)
 
-		cooker := NewRoastbeefCooker(55.5, int(2*time.Hour))
+		config := config.CookerConfig{
+			Temperture: 55.5,
+			Duration:   7200,
+		}
+		cooker := NewRoastbeefCooker(config)
 		err := cooker.Cook(mockDevice)
 		assert.Nil(t, err)
 	})
@@ -31,7 +35,11 @@ func Test_Cook(t *testing.T) {
 		mockDevice := NewMockDevice(ctlr)
 		mockDevice.EXPECT().IsReady().Return(response.Ng, fmt.Errorf("mock error"))
 
-		cooker := NewRoastbeefCooker(55.5, int(2*time.Hour))
+		config := config.CookerConfig{
+			Temperture: 55.5,
+			Duration:   7200,
+		}
+		cooker := NewRoastbeefCooker(config)
 		err := cooker.Cook(mockDevice)
 		expected := "mock error"
 		assert.Equal(t, expected, err.Error())
@@ -41,8 +49,11 @@ func Test_Cook(t *testing.T) {
 		defer ctlr.Finish()
 		mockDevice := NewMockDevice(ctlr)
 		mockDevice.EXPECT().IsReady().Return(response.Ng, nil)
-
-		cooker := NewRoastbeefCooker(55.5, int(2*time.Hour))
+		config := config.CookerConfig{
+			Temperture: 55.5,
+			Duration:   7200,
+		}
+		cooker := NewRoastbeefCooker(config)
 		err := cooker.Cook(mockDevice)
 		expected := "device is not ready"
 		assert.Equal(t, expected, err.Error())
