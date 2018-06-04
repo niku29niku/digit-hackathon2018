@@ -20,5 +20,8 @@ func TestDecode(t *testing.T) {
 		assert.Equal(t, "token", twilio.AuthToken)
 		assert.Equal(t, "+810000000000", twilio.FromPhoneNumber)
 		assert.Equal(t, "http://demo.twilio.com/docs/voice.xml", twilio.CallbackURL)
+		cooker := config.Cooker
+		assert.Equal(t, "/dev/usb.ttymodem77", cooker.DeviceName)
+		assert.Equal(t, 38400, cooker.BaudRate)
 	})
 }

@@ -3,3 +3,7 @@ sid = "sid"
 token = "token"
 phone_number = "+810000000000"
 callback_url = "http://demo.twilio.com/docs/voice.xml"
+
+[cooker]
+device = "/dev/usb.ttymodem77"
+baudrate = 38400
