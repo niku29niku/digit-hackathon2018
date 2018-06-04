@@ -27,9 +27,9 @@ func (t *twilioClient) call(tos []string) []error {
 				return
 			}
 			c := make(chan error)
-			go func(n string) {
+			go func(n string, c chan error) {
 				c <- t.Twilio.Call(n)
-			}(num)
+			}(num, c)
 			for {
 				select {
 				case receive := <-c:
@@ -37,9 +37,11 @@ func (t *twilioClient) call(tos []string) []error {
 						e = fmt.Errorf("%s, error: %s", toNum, receive.Error())
 					}
 					channel <- e
+					return
 				case <-time.After(5 * time.Second):
 					e = fmt.Errorf("%s, error: twilio timeout", toNum)
 					channel <- e
+					return
 				}
 			}
 		}(to)
