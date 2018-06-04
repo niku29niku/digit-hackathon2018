@@ -4,6 +4,10 @@ token = "token"
 phone_number = "+810000000000"
 callback_url = "http://demo.twilio.com/docs/voice.xml"
 
-[cooker]
+[device]
 device = "/dev/usb.ttymodem77"
 baudrate = 38400
+
+[cooker]
+temperture = 55.5
+duration = 7200

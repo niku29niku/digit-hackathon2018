@@ -17,7 +17,7 @@ func main() {
 		fmt.Fprintf(os.Stderr, "Configuration error: %s \n", err.Error())
 		os.Exit(1)
 	}
-	cookerDevice, err := device.GetDevice(configuration.Cooker.DeviceName, configuration.Cooker.BaudRate)
+	cookerDevice, err := device.GetDevice(configuration.Device.DeviceName, configuration.Device.BaudRate)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Cookerdevice error: %s \n", err.Error())
 		os.Exit(1)

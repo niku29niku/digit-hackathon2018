@@ -11,6 +11,7 @@ import (
 type Config struct {
 	Twilio TwilioConfig `toml:"twilio"`
 	Cooker CookerConfig `toml:"cooker"`
+	Device DeviceConfig `toml:"device"`
 }
 
 // TwilioConfig is defined to Twilio configuration
@@ -21,10 +22,16 @@ type TwilioConfig struct {
 	CallbackURL     string `toml:"callback_url"`
 }
 
-// CookerConfig is defined to cooker device configuration
-type CookerConfig struct {
+// DeviceConfig is defined to device configuration
+type DeviceConfig struct {
 	DeviceName string `toml:"device"`
 	BaudRate   int    `toml:"baudrate"`
+}
+
+// CookerConfig is defined to cooking configuration
+type CookerConfig struct {
+	Duration   int     `toml:"duration"`
+	Temperture float64 `toml:"temperture"`
 }
 
 // Decode config file to Config
