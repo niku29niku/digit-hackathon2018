@@ -2,6 +2,12 @@
 
 
 [[projects]]
+  name = "cloud.google.com/go"
+  packages = ["compute/metadata"]
+  revision = "0fd7230b2a7505833d5f69b75cbd6c9582401479"
+  version = "v0.23.0"
+
+[[projects]]
   name = "github.com/BurntSushi/toml"
   packages = ["."]
   revision = "b26d9c308763d68093482582cea63d69be07a0f0"
@@ -62,14 +68,58 @@
   version = "v1.2.1"
 
 [[projects]]
+  branch = "v1"
+  name = "github.com/zabawaba99/firego"
+  packages = ["sync"]
+  revision = "4d07741c1dde0b0d76218e8365baea10c33cf968"
+
+[[projects]]
   branch = "master"
   name = "golang.org/x/net"
-  packages = ["context"]
+  packages = [
+    "context",
+    "context/ctxhttp"
+  ]
   revision = "dfa909b99c79129e1100513e5cd36307665e5723"
+
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/oauth2"
+  packages = [
+    ".",
+    "google",
+    "internal",
+    "jws",
+    "jwt"
+  ]
+  revision = "1e0a3fa8ba9a5c9eb35c271780101fdaf1b205d7"
+
+[[projects]]
+  name = "google.golang.org/appengine"
+  packages = [
+    ".",
+    "internal",
+    "internal/app_identity",
+    "internal/base",
+    "internal/datastore",
+    "internal/log",
+    "internal/modules",
+    "internal/remote_api",
+    "internal/urlfetch",
+    "urlfetch"
+  ]
+  revision = "150dc57a1b433e64154302bdc40b6bb8aefa313a"
+  version = "v1.0.0"
+
+[[projects]]
+  branch = "v1"
+  name = "gopkg.in/zabawaba99/firego.v1"
+  packages = ["."]
+  revision = "4d07741c1dde0b0d76218e8365baea10c33cf968"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "7b8ba9fac876f9c0294e0c3cfef54eb29d84ff92fc7b37ef03e9abc49819d0e4"
+  inputs-digest = "9c6b65784793e0c4168b38a70a5aed0e2fd2e96103b17216a02150f7d48e9e60"
   solver-name = "gps-cdcl"
   solver-version = 1
