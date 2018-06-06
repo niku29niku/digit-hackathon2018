@@ -1,7 +1,6 @@
 package device
 
 import (
-	"fmt"
 	"regexp"
 	"sync"
 	"time"
@@ -36,7 +35,7 @@ const timeoutDuration = 5 * time.Second
 // GetDevice get Device instance
 func GetDevice(config config.DeviceConfig) (dev Device, err error) {
 	once.Do(func() {
-		config := &serial.Config{Address: config.DeviceName, BaudRate: config.BaudRate}
+		config := &serial.Config{Address: config.DeviceName, BaudRate: config.BaudRate, Timeout: timeoutDuration}
 		glog.V(2).Infof("Address : %s, Baudrate : %d ", config.Address, config.BaudRate)
 		port, e := serial.Open(config)
 		if e != nil {
@@ -84,37 +83,20 @@ func (dev *arduino) executeStatusCommand(com command.Command) (st response.Statu
 }
 
 func (dev *arduino) executeCommand(com string) (resp string, err error) {
-	result := make(chan readResult)
-	go func() {
-		wr := []byte(com)
-		glog.V(2).Infof("write command %s", wr)
-		_, e := dev.port.Write([]byte(com))
-		if e != nil {
-			result <- readResult{"", e}
-			return
-		}
-		b := make([]byte, 10, 10)
-		_, e = dev.port.Read(b)
-		glog.V(2).Infof("read result %s", b)
-		s := string(b)
-		re := regexp.MustCompile("(.+)\n")
-		rs := re.FindAllStringSubmatch(s, -1)
-		result <- readResult{rs[0][0], e}
-	}()
-	for {
-		select {
-		case receive := <-result:
-			resp = receive.str
-			err = receive.err
-			return
-		case <-time.After(timeoutDuration):
-			err = fmt.Errorf("connection timeout for %d second", timeoutDuration/time.Second)
-			return
-		}
+	wr := []byte(com)
+	glog.V(2).Infof("write command %s", wr)
+	_, err = dev.port.Write([]byte(com))
+	if err != nil {
+		return
 	}
-}
-
-type readResult struct {
-	str string
-	err error
+	b := make([]byte, 10, 10)
+	_, err = dev.port.Read(b)
+	if err != nil {
+		return
+	}
+	glog.V(2).Infof("read result %s", b)
+	s := string(b)
+	re := regexp.MustCompile("(.+)\n")
+	resp = re.FindAllStringSubmatch(s, -1)[0][0]
+	return
 }

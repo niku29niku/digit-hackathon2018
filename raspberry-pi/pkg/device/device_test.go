@@ -1,10 +1,8 @@
 package device
 
 import (
-	"fmt"
 	"math"
 	"testing"
-	"time"
 
 	"github.com/golang/mock/gomock"
 	"github.com/niku29niku/digit-hackathon2018/raspberry-pi/pkg/commander"
@@ -66,30 +64,5 @@ func Test_FaildConnection(t *testing.T) {
 		device := &arduino{mockSerial, commander.NewCommander(), response.NewParser()}
 		_, err := device.IsReady()
 		assert.Equal(t, err.Error(), "response is invalid KO\r\n")
-	})
-	t.Run("should get error when write timeout", func(t *testing.T) {
-		ctlr := gomock.NewController(t)
-		defer ctlr.Finish()
-		mockSerial := NewMockPort(ctlr)
-		mockSerial.EXPECT().Write(gomock.Any()).DoAndReturn(func(p []byte) (int, error) {
-			time.Sleep(10 * time.Second)
-			return 0, fmt.Errorf("failed")
-		})
-		device := &arduino{mockSerial, commander.NewCommander(), response.NewParser()}
-		_, err := device.Start()
-		assert.Equal(t, err.Error(), "connection timeout for 5 second")
-	})
-	t.Run("shoud get error when read timeout", func(t *testing.T) {
-		ctlr := gomock.NewController(t)
-		defer ctlr.Finish()
-		mockSerial := NewMockPort(ctlr)
-		mockSerial.EXPECT().Write(gomock.Any()).Return(0, nil).MaxTimes(math.MaxInt64)
-		mockSerial.EXPECT().Read(gomock.Any()).DoAndReturn(func(p []byte) (int, error) {
-			time.Sleep(10 * time.Second)
-			return 0, fmt.Errorf("failed")
-		})
-		device := &arduino{mockSerial, commander.NewCommander(), response.NewParser()}
-		_, err := device.Start()
-		assert.Equal(t, err.Error(), "connection timeout for 5 second")
 	})
 }
