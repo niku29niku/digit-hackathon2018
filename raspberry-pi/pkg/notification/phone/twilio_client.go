@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/golang/glog"
 	"github.com/niku29niku/digit-hackathon2018/raspberry-pi/pkg/notification/phone/twilio"
 )
 
@@ -28,6 +29,7 @@ func (t *twilioClient) call(tos []string) []error {
 			}
 			c := make(chan error)
 			go func(n string, c chan error) {
+				glog.V(2).Infof("call to : %s", n)
 				c <- t.Twilio.Call(n)
 			}(num, c)
 			for {

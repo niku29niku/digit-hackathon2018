@@ -1,6 +1,9 @@
 package phone
 
 import (
+	"strings"
+
+	"github.com/golang/glog"
 	firego "gopkg.in/zabawaba99/firego.v1"
 )
 
@@ -25,6 +28,9 @@ func (rep *firebasePhoneRepository) PhoneNumbers() (numbers []string, err error)
 		return nil, err
 	}
 	numbers = make([]string, 0)
+	if glog.V(2) {
+		glog.Infof("get numbers : %s", strings.Join(numbers, ","))
+	}
 	for _, col := range values {
 		num := col["telNum"]
 		numbers = append(numbers, num)

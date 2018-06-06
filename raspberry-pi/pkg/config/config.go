@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 
 	"github.com/BurntSushi/toml"
+	"github.com/golang/glog"
 )
 
 // Config is defined configuration file
@@ -43,5 +44,6 @@ func Decode(path string) (config Config, err error) {
 // DecodeDefaultToml will decode config file in $HOME/niku.toml
 func DecodeDefaultToml() (Config, error) {
 	path := filepath.Join(os.Getenv("HOME"), "niku.toml")
+	glog.V(2).Infof("configuration file path : %s", path)
 	return Decode(path)
 }

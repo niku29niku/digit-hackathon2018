@@ -1,11 +1,11 @@
 package main
 
 import (
-	"fmt"
-	"log"
+	"flag"
 	"os"
 	"time"
 
+	"github.com/golang/glog"
 	"github.com/niku29niku/digit-hackathon2018/raspberry-pi/pkg/config"
 	"github.com/niku29niku/digit-hackathon2018/raspberry-pi/pkg/cooker"
 	"github.com/niku29niku/digit-hackathon2018/raspberry-pi/pkg/device"
@@ -16,50 +16,47 @@ import (
 )
 
 func main() {
+	flag.Parse()
 	firebase, err := firebase.NewFirebaseClient()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "NewFirebaseClient error : %s \n", err.Error())
-		os.Exit(1)
+		glog.Fatalf("NewFirebaseClient error : %s ", err)
 	}
 	configuration, err := config.DecodeDefaultToml()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Configuration error: %s \n", err.Error())
-		os.Exit(1)
-	}
-	timerRepository := timer.NewFirebaseRepository(firebase)
-	err = timerRepository.SetTimer(time.Duration(configuration.Cooker.Duration) * time.Second)
-	defer func() {
-	}()
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "TimerRepository error : %s \n", err.Error())
-		os.Exit(1)
+		glog.Fatalf("DecodeDefaultToml error : %s ", err)
 	}
 	cookerDevice, err := device.GetDevice(configuration.Device)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Cookerdevice error: %s \n", err.Error())
-		os.Exit(1)
+		glog.Fatalf("GetDevice error : %s ", err)
 	}
 	ck := cooker.NewRoastbeefCooker(configuration.Cooker)
 	err = ck.Cook(cookerDevice)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Cooker error: %s \n", err.Error())
-		os.Exit(1)
+		glog.Fatalf("Cooker error: %s ", err)
+	}
+	timerRepository := timer.NewFirebaseRepository(firebase)
+	err = timerRepository.SetTimer(time.Duration(configuration.Cooker.Duration) * time.Second)
+	if err != nil {
+		glog.Fatalf("SetTimer error : %s ", err)
 	}
 	err = timerRepository.Remove()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "TimerRepository error : %s \n", err.Error())
+		glog.Errorf("TimerRepository.Remove error : %s ", err)
 	}
 	phone := phone.NewPhoneClient(configuration.Twilio, phone.NewParser())
 	phoneRepository := phoneRep.NewFirebaseRepository(firebase)
 	numbers, err := phoneRepository.PhoneNumbers()
 	if err != nil {
-		log.Fatalf("PhoneNumbers error : %s", err.Error())
+		glog.Errorf("PhoneNumbers error : %s", err)
 	}
 	errors := phone.Notification(numbers)
 	if len(errors) > 0 {
 		for _, err := range errors {
-			fmt.Fprintf(os.Stderr, "Phone error: %s \n", err.Error())
+			glog.Errorf("Phone Notification error : %s", err)
 		}
+	}
+	if err != nil || len(errors) > 0 {
+		os.Exit(1)
 	}
 	os.Exit(0)
 }

@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/goburrow/serial"
+	"github.com/golang/glog"
 	"github.com/niku29niku/digit-hackathon2018/raspberry-pi/pkg/command"
 	"github.com/niku29niku/digit-hackathon2018/raspberry-pi/pkg/commander"
 	"github.com/niku29niku/digit-hackathon2018/raspberry-pi/pkg/config"
@@ -36,6 +37,7 @@ const timeoutDuration = 5 * time.Second
 func GetDevice(config config.DeviceConfig) (dev Device, err error) {
 	once.Do(func() {
 		config := &serial.Config{Address: config.DeviceName, BaudRate: config.BaudRate}
+		glog.V(2).Infof("Address : %s, Baudrate : %d ", config.Address, config.BaudRate)
 		port, e := serial.Open(config)
 		if e != nil {
 			err = e
@@ -84,6 +86,8 @@ func (dev *arduino) executeStatusCommand(com command.Command) (st response.Statu
 func (dev *arduino) executeCommand(com string) (resp string, err error) {
 	result := make(chan readResult)
 	go func() {
+		wr := []byte(com)
+		glog.V(2).Infof("write command %s", wr)
 		_, e := dev.port.Write([]byte(com))
 		if e != nil {
 			result <- readResult{"", e}
@@ -91,6 +95,7 @@ func (dev *arduino) executeCommand(com string) (resp string, err error) {
 		}
 		b := make([]byte, 10, 10)
 		_, e = dev.port.Read(b)
+		glog.V(2).Infof("read result %s", b)
 		s := string(b)
 		re := regexp.MustCompile("(.+)\n")
 		rs := re.FindAllStringSubmatch(s, -1)

@@ -3,6 +3,7 @@ package timer
 import (
 	"time"
 
+	"github.com/golang/glog"
 	"gopkg.in/zabawaba99/firego.v1"
 )
 
@@ -31,7 +32,7 @@ func (rep *firebaseTimerRepository) SetTimer(duration time.Duration) error {
 			"cooking":   true,
 		},
 	}
-
+	glog.V(2).Infof("update %s", value)
 	return rep.firebase.Update(value)
 }
 
@@ -40,5 +41,6 @@ func (rep *firebaseTimerRepository) Remove() error {
 		"willEndAt": nil,
 		"cooking":   false,
 	}
+	glog.V(2).Infof("update %s", value)
 	return rep.firebase.Child("timer").Update(value)
 }

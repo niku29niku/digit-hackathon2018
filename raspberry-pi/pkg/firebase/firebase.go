@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/golang/glog"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
 	firego "gopkg.in/zabawaba99/firego.v1"
@@ -13,6 +14,7 @@ import (
 // NewFirebaseClient create firebase client instance
 func NewFirebaseClient() (*firego.Firebase, error) {
 	credPath := filepath.Join(os.Getenv("HOME"), "digit-hackathon2018-niku29-firebase.json")
+	glog.V(2).Infof("credential file path : %s", credPath)
 	cred, err := ioutil.ReadFile(credPath)
 	if err != nil {
 		return nil, err
