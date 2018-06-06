@@ -35,10 +35,12 @@ func main() {
 		glog.Fatalf("Cooker error: %s ", err)
 	}
 	timerRepository := timer.NewFirebaseRepository(firebase)
-	err = timerRepository.SetTimer(time.Duration(configuration.Cooker.Duration) * time.Second)
+	duration := time.Duration(configuration.Cooker.Duration) * time.Second
+	err = timerRepository.SetTimer(duration)
 	if err != nil {
 		glog.Fatalf("SetTimer error : %s ", err)
 	}
+	time.Sleep(duration)
 	err = timerRepository.Remove()
 	if err != nil {
 		glog.Errorf("TimerRepository.Remove error : %s ", err)
