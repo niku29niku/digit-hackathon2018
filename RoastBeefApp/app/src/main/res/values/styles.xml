@@ -1,0 +1,16 @@
+<resources>
+    <style name="mytoast">
+        <item name="textBold">true</item>
+        <item name="textColor">#ffffff</item>
+        <item name="textSize">14sp</item>
+        <item name="colorBackground">#ff0000</item>
+        <item name="solidBackground">true</item>
+        <item name="strokeWidth">3dp</item>
+        <item name="strokeColor">#fff</item>
+        <item name="iconStart">@drawable/range</item>
+        <!--item name="iconEnd">@drawable/common_google_signin_btn_icon_dark</item-->
+        <item name="length">SHORT</item> LONG or SHORT
+        <!--item name="gravity"></item> top or center-->
+        <item name="radius">100dp</item>
+    </style>
+</resources>
