@@ -68,3 +68,11 @@
 [[constraint]]
   branch = "master"
   name = "github.com/golang/glog"
+
+[[constraint]]
+  name = "gopkg.in/cheggaaa/pb.v1"
+  version = "1.0.25"
+
+[[constraint]]
+  name = "gopkg.in/kyokomi/emoji.v1"
+  version = "1.5.1"

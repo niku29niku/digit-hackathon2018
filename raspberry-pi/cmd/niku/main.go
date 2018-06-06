@@ -13,6 +13,8 @@ import (
 	"github.com/niku29niku/digit-hackathon2018/raspberry-pi/pkg/notification/phone"
 	phoneRep "github.com/niku29niku/digit-hackathon2018/raspberry-pi/pkg/repository/phone"
 	"github.com/niku29niku/digit-hackathon2018/raspberry-pi/pkg/repository/timer"
+	pb "gopkg.in/cheggaaa/pb.v1"
+	emoji "gopkg.in/kyokomi/emoji.v1"
 )
 
 func main() {
@@ -40,7 +42,14 @@ func main() {
 	if err != nil {
 		glog.Fatalf("SetTimer error : %s ", err)
 	}
-	time.Sleep(duration)
+	emoji.Println(":thinking: :cow: started :watch: :ok_hand:")
+	bar := pb.StartNew(configuration.Cooker.Duration)
+	bar.Format("🔌🍖🐃🔥📲")
+	for i := 0; i < configuration.Cooker.Duration; i++ {
+		bar.Increment()
+		time.Sleep(1 * time.Second)
+	}
+	bar.FinishPrint(emoji.Sprint(":smile: :meat_on_bone: finish !! :thumbsup: :tada:"))
 	err = timerRepository.Remove()
 	if err != nil {
 		glog.Errorf("TimerRepository.Remove error : %s ", err)

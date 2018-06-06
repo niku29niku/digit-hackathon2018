@@ -50,6 +50,12 @@
   version = "v1.0.2"
 
 [[projects]]
+  name = "github.com/mattn/go-runewidth"
+  packages = ["."]
+  revision = "9e777a8366cce605130a531d2cd6363d07ad7317"
+  version = "v0.0.2"
+
+[[projects]]
   name = "github.com/nyaruka/phonenumbers"
   packages = ["."]
   revision = "cec2019c95f862df4de9394aa508304c3cba273d"
@@ -101,6 +107,12 @@
   revision = "1e0a3fa8ba9a5c9eb35c271780101fdaf1b205d7"
 
 [[projects]]
+  branch = "master"
+  name = "golang.org/x/sys"
+  packages = ["unix"]
+  revision = "538ab54ba952cc4c7c705fa213fbf7993c97c175"
+
+[[projects]]
   name = "google.golang.org/appengine"
   packages = [
     ".",
@@ -118,6 +130,18 @@
   version = "v1.0.0"
 
 [[projects]]
+  name = "gopkg.in/cheggaaa/pb.v1"
+  packages = ["."]
+  revision = "2af8bbdea9e99e83b3ac400d8f6b6d1b8cbbf338"
+  version = "v1.0.25"
+
+[[projects]]
+  name = "gopkg.in/kyokomi/emoji.v1"
+  packages = ["."]
+  revision = "2e9a9507333f3ee28f3fab88c2c3aba34455d734"
+  version = "v1.5.1"
+
+[[projects]]
   branch = "v1"
   name = "gopkg.in/zabawaba99/firego.v1"
   packages = ["."]
@@ -126,6 +150,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "62f4d9126a64adbe282d19f02389a0b0bcc5f97c823576b1b20bcb45a8ee64f5"
+  inputs-digest = "361773a70b23261a388fad2c4edc7c4c4e3795b2ded7308187030fc30ebc83ff"
   solver-name = "gps-cdcl"
   solver-version = 1
