@@ -22,10 +22,13 @@ type firebaseTimerRepository struct {
 }
 
 func (rep *firebaseTimerRepository) SetTimer(duration time.Duration) error {
-	d := int(duration / time.Second)
-	value := map[string]map[string]int{
+	now := time.Now()
+	willEndAt := now.Add(duration)
+	formatted := willEndAt.Format(time.RFC3339)
+	value := map[string]map[string]interface{}{
 		"timer": {
-			"duration": d,
+			"willEndAt": formatted,
+			"cooking":   true,
 		},
 	}
 
@@ -33,5 +36,9 @@ func (rep *firebaseTimerRepository) SetTimer(duration time.Duration) error {
 }
 
 func (rep *firebaseTimerRepository) Remove() error {
-	return rep.firebase.Child("timer").Remove()
+	value := map[string]interface{}{
+		"willEndAt": nil,
+		"cooking":   false,
+	}
+	return rep.firebase.Child("timer").Update(value)
 }
