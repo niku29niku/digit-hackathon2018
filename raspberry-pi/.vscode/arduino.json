@@ -1,6 +1,6 @@
 {
     "board": "SparkFun:avr:promicro",
     "configuration": "cpu=16MHzatmega32U4",
-    "sketch": "raspberry-pi/test/arduino/test.ino",
-    "port": "/dev/cu.usbmodem14331"
+    "sketch": "test/arduino/test.ino",
+    "port": "/dev/cu.usbmodem14341"
 }

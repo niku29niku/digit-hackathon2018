@@ -12,6 +12,7 @@ type Repository interface {
 	Remove() error
 }
 
+// NewFirebaseRepository create new instance
 func NewFirebaseRepository(firebase *firego.Firebase) Repository {
 	return &firebaseTimerRepository{firebase}
 }
