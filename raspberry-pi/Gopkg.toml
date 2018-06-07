@@ -76,3 +76,7 @@
 [[constraint]]
   name = "gopkg.in/kyokomi/emoji.v1"
   version = "1.5.1"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/tarm/serial"

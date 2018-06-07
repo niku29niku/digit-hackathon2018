@@ -80,6 +80,12 @@
   version = "v1.2.1"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/tarm/serial"
+  packages = ["."]
+  revision = "eaafced92e9619f03c72527efeab21e326f3bc36"
+
+[[projects]]
   branch = "v1"
   name = "github.com/zabawaba99/firego"
   packages = ["sync"]
@@ -150,6 +156,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "361773a70b23261a388fad2c4edc7c4c4e3795b2ded7308187030fc30ebc83ff"
+  inputs-digest = "f9f2c2aca4043112d5ac1c0fcc49254a09ba5cb097dc8761c3492d1030edfd49"
   solver-name = "gps-cdcl"
   solver-version = 1
