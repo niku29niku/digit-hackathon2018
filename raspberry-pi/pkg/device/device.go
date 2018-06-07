@@ -5,12 +5,12 @@ import (
 	"sync"
 	"time"
 
-	"github.com/goburrow/serial"
 	"github.com/golang/glog"
 	"github.com/niku29niku/digit-hackathon2018/raspberry-pi/pkg/command"
 	"github.com/niku29niku/digit-hackathon2018/raspberry-pi/pkg/commander"
 	"github.com/niku29niku/digit-hackathon2018/raspberry-pi/pkg/config"
 	"github.com/niku29niku/digit-hackathon2018/raspberry-pi/pkg/response"
+	"github.com/tarm/serial"
 )
 
 // Device is serial connection device
@@ -22,7 +22,7 @@ type Device interface {
 }
 
 type arduino struct {
-	port      serial.Port
+	port      *serial.Port
 	commander commander.Commander
 	parser    response.Parser
 }
@@ -35,9 +35,9 @@ const timeoutDuration = 5 * time.Second
 // GetDevice get Device instance
 func GetDevice(config config.DeviceConfig) (dev Device, err error) {
 	once.Do(func() {
-		config := &serial.Config{Address: config.DeviceName, BaudRate: config.BaudRate, Timeout: timeoutDuration}
-		glog.V(2).Infof("Address : %s, Baudrate : %d ", config.Address, config.BaudRate)
-		port, e := serial.Open(config)
+		config := &serial.Config{Name: config.DeviceName, Baud: config.BaudRate, ReadTimeout: timeoutDuration}
+		glog.V(2).Infof("Address : %s, Baudrate : %d ", config.Name, config.Baud)
+		port, e := serial.OpenPort(config)
 		if e != nil {
 			err = e
 			return
