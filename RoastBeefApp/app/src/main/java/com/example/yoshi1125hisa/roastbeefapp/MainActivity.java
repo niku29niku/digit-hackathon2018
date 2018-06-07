@@ -17,6 +17,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
@@ -39,10 +40,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.IgnoreExtraProperties;
 import com.google.firebase.database.ValueEventListener;
 import com.muddzdev.styleabletoastlibrary.StyleableToast;
 
@@ -67,7 +71,6 @@ public class MainActivity extends AppCompatActivity{
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_main);
-
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationManager manager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
@@ -113,39 +116,16 @@ public class MainActivity extends AppCompatActivity{
         // sm　これをFirebaseでとってきたい。
         //180 = 3 ... 120 * 60 = 120
         //long countNumber = 1 * 60 * 1000; // 1分
+
+
         long countNumber = 10000;
         // インターバル
         long interval = 1;
-
         long second = countNumber / 1000;
         long minute = second / 60;
         long hour = minute / 60;
-
         final Context context = getApplicationContext();
-
-
-        // 受信側で取得したKeyを検索にかけてXYのInchを取得。
         DatabaseReference sendsRef = FirebaseDatabase.getInstance().getReference("timer");
-        sendsRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                for (DataSnapshot dSnapshot : snapshot.getChildren()) {
-                    // getApplication()でアプリケーションクラスのインスタンスを拾う
-                    String key = dSnapshot.getKey();
-                    String duration = (String) dSnapshot.child("duration").getValue();
-                }
-                // 保存した情報を用いた描画処理などを記載する。
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.d("error","error");
-                StyleableToast.makeText(context, "データベースにアクセス出来ませんでした。", Toast.LENGTH_SHORT, R.style.mytoast).show();
-            }
-
-        });
-
-
         inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         relativeLayout = findViewById(R.id.relativeLayout);
         telRefMsg = database.getReference("tel");
@@ -180,6 +160,7 @@ public class MainActivity extends AppCompatActivity{
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                              StyleableToast.makeText(context, "保存しました。", Toast.LENGTH_SHORT, R.style.mytoast).show();
+                            telNumText.getEditableText().clear();
 
 
                         }
@@ -202,7 +183,7 @@ public class MainActivity extends AppCompatActivity{
 
         countDown.start();
 /*
-        startButton.setOnClickListener(new View.OnClickListener() {
+ startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // 開始
@@ -210,7 +191,6 @@ public class MainActivity extends AppCompatActivity{
             }
         });
         */
-
     }
 
     @Override
@@ -241,11 +221,7 @@ public class MainActivity extends AppCompatActivity{
             // 完了
             timerText.setText(dataFormat.format(0));
 
-
-
-
             NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
             Intent notificationIntent = new Intent(MainActivity.this,TelListActivity.class);
             PendingIntent contentIntent = PendingIntent.getActivity(MainActivity.this, 0, notificationIntent, 0);
 
@@ -276,14 +252,7 @@ public class MainActivity extends AppCompatActivity{
             timerText.setText(String.format("%1$02d:%2$02d.%3$02d" ,mm, ss, ms));
             timerText.setText(dataFormat.format(millisUntilFinished));
 
-
-
-
-
-
-
         }
-
     }
 
     public void look(View v){

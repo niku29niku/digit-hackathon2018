@@ -40,16 +40,17 @@ public class PostAdapter extends ArrayAdapter<Post> {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.listview_item_post, parent, false);
 
                 viewHolder = new ViewHolder();
- //               viewHolder.usernameText = convertView.findViewById(R.id.username);
+              viewHolder.telNumText = convertView.findViewById(R.id.telNum);
               convertView.setTag(viewHolder);
             }
 
-           // viewHolder.dpiXText.setText(item.getDpiX());
+            viewHolder.telNumText.setText(item.getTelNum());
 
             return convertView;
         }
     static class ViewHolder{
 
-   //     TextView dpiXText;
+    TextView telNumText;
    }
 }
+
