@@ -1,59 +1,72 @@
 package com.example.yoshi1125hisa.roastbeefapp;
 
-import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.TextViewCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.Toolbar;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.muddzdev.styleabletoastlibrary.StyleableToast;
+import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.Objects;
 
 public class TelListActivity extends AppCompatActivity {
 
+    @IgnoreExtraProperties
+    public static class TelephoneNumber {
+        public String telNum;
+        public String key;
+        public TelephoneNumber() {}
+
+        public TelephoneNumber(String telNum) {
+            this.telNum = telNum;
+        }
+
+        @Override
+        public String toString() {
+            return telNum;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            TelephoneNumber that = (TelephoneNumber) o;
+            return Objects.equals(telNum, that.telNum) &&
+                    Objects.equals(key, that.key);
+        }
+
+        @Override
+        public int hashCode() {
+
+            return Objects.hash(telNum, key);
+        }
+    }
+
     ListView listView;
-    public static String key = "";
-    public static String telNum = "";
-    public static String telNumList[] = {""};
-
-
-   // private String[] telNum = {""};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tel_list);
-
-        final Context context = getApplicationContext();
-            // Add items via the Button and EditText at the bottom of the view.
-
-// ListViewにArrayAdapterを設定する
-        ListView listView = findViewById(R.id.listView);
-
-        // ListViewに表示するリスト項目をArrayListで準備する
-        ArrayList arrayList = new ArrayList<>();
-        // 要素の削除、順番変更のためArrayListを定義
-
-
-        arrayList.add("データが登録されていません");
+        final ListView listView = findViewById(R.id.listView);
+        final View emptyView = findViewById(R.id.empty);
+        listView.setEmptyView(emptyView);
+        final DatabaseReference sendsRef = FirebaseDatabase.getInstance().getReference("tel");
 
         // リスト項目とListViewを対応付けるArrayAdapterを用意する
-        final ArrayAdapter telArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, arrayList);
+        final ArrayAdapter<TelephoneNumber> telArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, new ArrayList<TelephoneNumber>());
         listView.setAdapter(telArrayAdapter);
 
 
@@ -67,13 +80,10 @@ public class TelListActivity extends AppCompatActivity {
              */
 
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                String deleteItem = (String) ((TextView) view).getText();
-
-
-                // 選択した項目を削除する
-               telArrayAdapter.remove(deleteItem);
-
-                StyleableToast.makeText(context, "登録されていた電話番号を削除しました。", Toast.LENGTH_SHORT, R.style.mytoast).show();
+                final TelephoneNumber item = telArrayAdapter.getItem(position);
+                if (item != null && item.key != null) {
+                    sendsRef.child(item.key).removeValue();
+                }
                 return false;
             }
 
@@ -81,54 +91,35 @@ public class TelListActivity extends AppCompatActivity {
         });
 
 
-        // 受信側で取得したKeyを検索にかけてXYのInchを取得。
-        DatabaseReference sendsRef = FirebaseDatabase.getInstance().getReference("tel");
-        sendsRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                for (DataSnapshot dSnapshot : snapshot.getChildren()) {
-                    // getApplication()でアプリケーションクラスのインスタンスを拾う
-                    key = dSnapshot.getKey();
-                    telNum = (String) dSnapshot.child("telNum").getValue();
-
-
-
-                }
-                // 保存した情報を用いた描画処理などを記載する。
-
-            }
-
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-
-        });
 
         sendsRef.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                key = dataSnapshot.getKey();
-                telNum = (String) dataSnapshot.child("telNum").getValue();
-
-                // 追加されたTodoのkey、title、isDoneが取得できているので、
-                // 保持しているデータの更新や描画処理を行う。
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, String s) {
+                final TelephoneNumber number = dataSnapshot.getValue(TelephoneNumber.class);
+                if (number != null) {
+                    number.key = dataSnapshot.getKey();
+                }
+                telArrayAdapter.add(number);
             }
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, String s) {
                 // Changed
             }
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                // Removed
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                final TelephoneNumber number = dataSnapshot.getValue(TelephoneNumber.class);
+                if (number != null) {
+                    number.key = dataSnapshot.getKey();
+                }
+                telArrayAdapter.remove(number);
             }
+
             @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, String s) {
                 // Moved
             }
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Error
             }
         });
