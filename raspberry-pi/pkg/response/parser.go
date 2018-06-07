@@ -3,6 +3,8 @@ package response
 import (
 	"fmt"
 	"strings"
+
+	"github.com/golang/glog"
 )
 
 // Parser parse response string
@@ -14,6 +16,7 @@ type parserImpl struct{}
 
 func (p *parserImpl) ParseStatus(resp string) (st Status, er error) {
 	r := strings.ToLower(strings.Trim(resp, "\r\n"))
+	glog.V(2).Infof("test string is (%s)", r)
 	if r == "ok" {
 		st = Ok
 	} else if r == "ng" {
