@@ -17,8 +17,10 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -30,6 +32,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import info.vividcode.time.iso8601.Iso8601ExtendedOffsetDateTimeFormat;
@@ -52,11 +56,13 @@ public class MainActivity extends AppCompatActivity{
 
     private static final String channelId = "RoastBeefApp";
     TextView timerView;
+    TextView phoneView;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         timerView = findViewById(R.id.timer);
+        phoneView = findViewById(R.id.telNumText);
         final NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if (manager == null) {
             throw new RuntimeException("NotificationManager is null");
@@ -95,6 +101,25 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
+        findViewById(R.id.register).setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                final String phoneNumber = phoneView.getText().toString();
+                if (TextUtils.isEmpty(phoneNumber)) {
+                    return;
+                }
+                final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("tel");
+                final String key = reference.push().getKey();
+                final TelephoneNumber telephoneNumber = new TelephoneNumber();
+                telephoneNumber.telNum = phoneNumber;
+                final Map<String, Object> map = telephoneNumber.toMap();
+                reference.child(key).updateChildren(map);
+                phoneView.setText("");
+                Toast.makeText(MainActivity.this, "登録しました", Toast.LENGTH_SHORT).show();
+
+            }
+        });
     }
 
     private void onCookingNotStarted(@SuppressWarnings("unused") FirebaseTimer timer) {
