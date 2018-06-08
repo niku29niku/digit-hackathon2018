@@ -1,6 +1,7 @@
 package com.example.yoshi1125hisa.roastbeefapp;
 
 import android.Manifest;
+import android.app.Application;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -39,8 +40,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.chrono.Chronology;
 import java.util.Locale;
+import java.util.stream.IntStream;
 
+import com.firebase.client.Firebase;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -48,29 +60,35 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.IgnoreExtraProperties;
 import com.google.firebase.database.ValueEventListener;
+import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.muddzdev.styleabletoastlibrary.StyleableToast;
+
 
 public class MainActivity extends AppCompatActivity{
 
     private TextView timerText;
    // private SimpleDateFormat dataFormat = new SimpleDateFormat("mm"+"分"/*:ss.SSS*/, Locale.US);
-   private SimpleDateFormat dataFormat = new SimpleDateFormat("mm:ss.SS", Locale.US);
+   private SimpleDateFormat dataFormat = new SimpleDateFormat("HH:mm:ss.SS", Locale.US);
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference telRefMsg;
     private EditText telNumText;
     private RelativeLayout relativeLayout;
     private InputMethodManager inputMethodManager;
+    public static String willEndAt = "2018-06-06T14:29:54+09:00";
+    public static Boolean cookStatus; //false
+    String channelId = "RoastBeefApp";
+    String notificationName = "お肉が完成しました！";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // タイトルバーを隠す場合
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        // ステータスバーを隠す場合
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        AndroidThreeTen.init(this); // <-
 
         setContentView(R.layout.activity_main);
+
+        final Context context = getApplicationContext();
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationManager manager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
@@ -78,11 +96,11 @@ public class MainActivity extends AppCompatActivity{
             NotificationChannel channel = new NotificationChannel(
                     // 一意のチャンネルID
                     // ここはどこかで定数にしておくのが良さそう
-                    "channel_id_sample",
+                    channelId,
 
                     // 設定に表示されるチャンネル名
                     // ここは実際にはリソースを指定するのが良さそう
-                    "プッシュ通知",
+                    notificationName,
 
                     // チャンネルの重要度
                     // 重要度によって表示箇所が異なる
@@ -113,19 +131,36 @@ public class MainActivity extends AppCompatActivity{
             }
         }
 
-        // sm　これをFirebaseでとってきたい。
-        //180 = 3 ... 120 * 60 = 120
-        //long countNumber = 1 * 60 * 1000; // 1分
+
+//        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();//UserInfo
+      /*  DatabaseReference ref = FirebaseDatabase.getInstance().getReference("timer");
+
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //Log.d("ondatachange", dataSnapshot.getRef().push().getKey().toString());
+                //  intent.putExtra("postData", dataSnapshot.getValue(Post.class));
+                willEndAt = dataSnapshot.getValue(Post.class).toString();
+            cookStatus = Boolean.valueOf(String.valueOf(dataSnapshot.getValue(Post.class)));
+
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                StyleableToast.makeText(context, "エラーが発生しました。", Toast.LENGTH_SHORT, R.style.mytoast).show();
+
+            }
+        });
+  //      ref.push().setValue(post);*/
 
 
         long countNumber = 10000;
-        // インターバル
+        // インターバル(更新時間)
         long interval = 1;
         long second = countNumber / 1000;
         long minute = second / 60;
         long hour = minute / 60;
-        final Context context = getApplicationContext();
-        DatabaseReference sendsRef = FirebaseDatabase.getInstance().getReference("timer");
+
+
         inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         relativeLayout = findViewById(R.id.relativeLayout);
         telRefMsg = database.getReference("tel");
@@ -137,14 +172,19 @@ public class MainActivity extends AppCompatActivity{
         //CountDownTimer(long millisInFuture, long countDownInterval);
         final CountDown countDown = new CountDown(countNumber, interval);
 
-        countDown.start();
 
 
+
+     /*if(cookStatus){
+           countDown.start();
+
+        } else{
+           timerText.setText("未調理");
+    }
+*/
         //EditTextにリスナーをセット
         telNumText.setOnKeyListener(new View.OnKeyListener() {
-
-
-
+            
             //コールバックとしてonKey()メソッドを定義
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -181,7 +221,7 @@ public class MainActivity extends AppCompatActivity{
 
 
 
-        countDown.start();
+       // countDown.start();
 /*
  startButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -260,5 +300,4 @@ public class MainActivity extends AppCompatActivity{
 
         startActivity(intent);
     }
-
 }

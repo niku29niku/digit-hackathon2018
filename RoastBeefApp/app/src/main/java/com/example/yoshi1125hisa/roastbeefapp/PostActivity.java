@@ -43,6 +43,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
             switch (id) {
                 case R.id.post:
                     String telNum = telNumText.getText().toString();
+
                     final Post post = new Post(telNum);
 
 
