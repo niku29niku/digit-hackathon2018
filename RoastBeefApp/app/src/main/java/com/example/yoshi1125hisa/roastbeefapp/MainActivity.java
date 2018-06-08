@@ -108,7 +108,6 @@ public class MainActivity extends AppCompatActivity{
             channel.setLightColor(Color.WHITE);
             // ロック画面での表示レベル
             channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
-
             // チャンネルの登録
             manager.createNotificationChannel(channel);
         }
@@ -127,9 +126,9 @@ public class MainActivity extends AppCompatActivity{
         }
 
 
-
+/*
 //        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();//UserInfo
-      /*  DatabaseReference ref = FirebaseDatabase.getInstance().getReference("timer");
+      DatabaseReference ref = FirebaseDatabase.getInstance().getReference("timer");
 
         ref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -137,7 +136,7 @@ public class MainActivity extends AppCompatActivity{
                 //Log.d("ondatachange", dataSnapshot.getRef().push().getKey().toString());
                 //  intent.putExtra("postData", dataSnapshot.getValue(Post.class));
                 willEndAt = dataSnapshot.getValue(Post.class).toString();
-            cookStatus = Boolean.valueOf(String.valueOf(dataSnapshot.getValue(Post.class)));
+                cookStatus = Boolean.valueOf(String.valueOf(dataSnapshot.getValue(Post.class)));
 
             }
             @Override
@@ -149,8 +148,8 @@ public class MainActivity extends AppCompatActivity{
   //      ref.push().setValue(post);*/
 
 
-        long countNumber = 1800;
 
+        long countNumber = 400 * 1000;
 
         // インターバル(更新時間)
         long interval = 1;
@@ -280,7 +279,7 @@ public class MainActivity extends AppCompatActivity{
         @Override
         public void onTick(long millisUntilFinished) {
             // 残り時間を分、秒、ミリ秒に分割
-            long HH =( millisUntilFinished / (1000 * 60 * 60)) % 24;
+            long HH = millisUntilFinished / (1000 * 60 * 60) % 24;
             long mm = millisUntilFinished / 1000 / 60;
             long ss = millisUntilFinished / 1000 % 60;
             long ms = millisUntilFinished - ss * 1000 - mm * 1000 * 60;
