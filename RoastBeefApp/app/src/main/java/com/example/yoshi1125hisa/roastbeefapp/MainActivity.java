@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity{
         long countNumber = 400 * 1000;
 
         // インターバル(更新時間)
-        long interval = 1;
+        long interval = 10;
 
 
         inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -279,6 +279,7 @@ public class MainActivity extends AppCompatActivity{
         @Override
         public void onTick(long millisUntilFinished) {
             // 残り時間を分、秒、ミリ秒に分割
+
             long HH = millisUntilFinished / (1000 * 60 * 60) % 24;
             long mm = millisUntilFinished / 1000 / 60;
             long ss = millisUntilFinished / 1000 % 60;
