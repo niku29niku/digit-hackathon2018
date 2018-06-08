@@ -19,6 +19,7 @@ import android.os.Build;
 import android.os.CountDownTimer;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.constraint.solver.widgets.Rectangle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
@@ -64,18 +65,19 @@ import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.muddzdev.styleabletoastlibrary.StyleableToast;
 
 
+
+
 public class MainActivity extends AppCompatActivity{
 
     private TextView timerText;
-   // private SimpleDateFormat dataFormat = new SimpleDateFormat("mm"+"分"/*:ss.SSS*/, Locale.US);
-   private SimpleDateFormat dataFormat = new SimpleDateFormat("HH:mm:ss.SS", Locale.US);
+   private SimpleDateFormat dataFormat = new SimpleDateFormat("HH:mm:ss"/*.SS*/, Locale.US);
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference telRefMsg;
     private EditText telNumText;
     private RelativeLayout relativeLayout;
     private InputMethodManager inputMethodManager;
     public static String willEndAt = "2018-06-06T14:29:54+09:00";
-    public static Boolean cookStatus; //false
+    public static Boolean cookStatus = true; //false
     String channelId = "RoastBeefApp";
     String notificationName = "お肉が完成しました！";
 
@@ -83,25 +85,18 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AndroidThreeTen.init(this); // <-
-
         setContentView(R.layout.activity_main);
 
         final Context context = getApplicationContext();
-
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationManager manager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-
             NotificationChannel channel = new NotificationChannel(
                     // 一意のチャンネルID
                     // ここはどこかで定数にしておくのが良さそう
                     channelId,
-
                     // 設定に表示されるチャンネル名
                     // ここは実際にはリソースを指定するのが良さそう
                     notificationName,
-
                     // チャンネルの重要度
                     // 重要度によって表示箇所が異なる
                     NotificationManager.IMPORTANCE_DEFAULT
@@ -132,6 +127,7 @@ public class MainActivity extends AppCompatActivity{
         }
 
 
+
 //        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();//UserInfo
       /*  DatabaseReference ref = FirebaseDatabase.getInstance().getReference("timer");
 
@@ -153,12 +149,11 @@ public class MainActivity extends AppCompatActivity{
   //      ref.push().setValue(post);*/
 
 
-        long countNumber = 10000;
+        long countNumber = 1800;
+
+
         // インターバル(更新時間)
         long interval = 1;
-        long second = countNumber / 1000;
-        long minute = second / 60;
-        long hour = minute / 60;
 
 
         inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -173,15 +168,13 @@ public class MainActivity extends AppCompatActivity{
         final CountDown countDown = new CountDown(countNumber, interval);
 
 
-
-
-     /*if(cookStatus){
+     if(cookStatus){
            countDown.start();
 
         } else{
            timerText.setText("未調理");
     }
-*/
+
         //EditTextにリスナーをセット
         telNumText.setOnKeyListener(new View.OnKeyListener() {
             
@@ -281,15 +274,18 @@ public class MainActivity extends AppCompatActivity{
 
         }
 
+
+
         // インターバルで呼ばれる
         @Override
         public void onTick(long millisUntilFinished) {
             // 残り時間を分、秒、ミリ秒に分割
+            long HH =( millisUntilFinished / (1000 * 60 * 60)) % 24;
             long mm = millisUntilFinished / 1000 / 60;
             long ss = millisUntilFinished / 1000 % 60;
             long ms = millisUntilFinished - ss * 1000 - mm * 1000 * 60;
           //  timerText.setText(String.format("%1$02d"/*:%2$02d.%3$03d*/ ,mm/*, ss, ms*/));
-            timerText.setText(String.format("%1$02d:%2$02d.%3$02d" ,mm, ss, ms));
+            timerText.setText(String.format("%1$02d:%2$02d:%3$02d"/*.%4$02d */,HH , mm, ss/*, ms*/));
             timerText.setText(dataFormat.format(millisUntilFinished));
 
         }
@@ -300,4 +296,8 @@ public class MainActivity extends AppCompatActivity{
 
         startActivity(intent);
     }
+
+
+
+
 }
