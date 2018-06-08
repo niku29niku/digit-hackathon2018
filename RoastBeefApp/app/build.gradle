@@ -30,18 +30,12 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:15.0.1'
     implementation 'com.google.firebase:firebase-database:16.0.1'
     implementation 'com.muddzdev:styleabletoast:2.1.2'
-
     def supportLibVersion = '26.1.0'
     implementation 'com.android.support:appcompat-v7:' + supportLibVersion
     implementation 'com.android.support:support-v4:'   + supportLibVersion
     implementation 'com.android.support:design:'       + supportLibVersion
-
     implementation 'com.firebaseui:firebase-ui-database:1.0.1'
-
-    implementation 'com.jakewharton.threetenabp:threetenabp:1.0.3'
     implementation 'net.danlew:android.joda:2.9.2'
-
-
-    implementation 'com.jakewharton.threetenabp:threetenabp:1.0.3'
+    implementation 'info.vividcode:date-format-iso8601:1.0.0'
    }
 apply plugin: 'com.google.gms.google-services'

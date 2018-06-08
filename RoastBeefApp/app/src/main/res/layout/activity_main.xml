@@ -17,7 +17,6 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="463dp"
-        android:text="00分"
         android:textColor="@android:color/white"
         android:textSize="120sp" />
 
@@ -43,7 +42,7 @@
         android:layout_height="400dp"
         android:layout_above="@+id/textView2"
         android:layout_centerHorizontal="true"
-        app:srcCompat="@drawable/range" />
+        app:srcCompat="@drawable/micro_renge" />
 
     <TextView
         android:id="@+id/textView2"
@@ -64,7 +63,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="187dp"
         android:gravity="center"
-        android:onClick="look"
         android:text="登録した電話番号を確認する"
         android:textColor="@android:color/white"
         android:textSize="20sp" />
