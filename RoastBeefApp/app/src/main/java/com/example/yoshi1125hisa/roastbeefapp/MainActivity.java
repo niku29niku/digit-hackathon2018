@@ -1,5 +1,6 @@
 package com.example.yoshi1125hisa.roastbeefapp;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -7,18 +8,25 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.TaskStackBuilder;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +36,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.IgnoreExtraProperties;
 import com.google.firebase.database.ValueEventListener;
+import com.muddzdev.styleabletoastlibrary.StyleableToast;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -39,11 +48,17 @@ import java.util.concurrent.TimeUnit;
 import info.vividcode.time.iso8601.Iso8601ExtendedOffsetDateTimeFormat;
 
 public class MainActivity extends AppCompatActivity{
+    InputMethodManager inputMethodManager;
+    RelativeLayout relativeLayout;
+
+
 
     @IgnoreExtraProperties
     public static class FirebaseTimer {
         public String willEndAt;
         public boolean cooking;
+        RelativeLayout relativeLayout;
+
 
         public FirebaseTimer() {
         }
@@ -57,12 +72,19 @@ public class MainActivity extends AppCompatActivity{
     private static final String channelId = "RoastBeefApp";
     TextView timerView;
     TextView phoneView;
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         timerView = findViewById(R.id.timer);
         phoneView = findViewById(R.id.telNumText);
+
+        inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        relativeLayout = findViewById(R.id.relativeLayout);
+
+        final Context context = getApplicationContext();
         final NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if (manager == null) {
             throw new RuntimeException("NotificationManager is null");
@@ -87,10 +109,59 @@ public class MainActivity extends AppCompatActivity{
                 }
             }
 
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
+
+
+
+        //EditTextにリスナーをセット
+        phoneView.setOnKeyListener(new View.OnKeyListener() {
+
+            //コールバックとしてonKey()メソッドを定義
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                //イベントを取得するタイミングには、ボタンが押されてなおかつエンターキーだったときを指定
+                if((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)){
+                    //キーボードを閉じる
+                    inputMethodManager.hideSoftInputFromWindow(phoneView.getWindowToken(), InputMethodManager.RESULT_UNCHANGED_SHOWN);
+                    final String phoneNumber = phoneView.getText().toString();
+                    if (TextUtils.isEmpty(phoneNumber)) {
+                        return false;
+                    }
+                    final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("tel");
+                    final String key = reference.push().getKey();
+                    final TelephoneNumber telephoneNumber = new TelephoneNumber();
+                    telephoneNumber.telNum = phoneNumber;
+                    final Map<String, Object> map = telephoneNumber.toMap();
+                    reference.child(key).updateChildren(map);
+                    phoneView.getEditableText().clear();
+                    StyleableToast.makeText(context, "登録しました。", Toast.LENGTH_SHORT, R.style.mytoast).show();
+
+
+                }
+
+                return false;
+            }
+        });
+
+
+
+        if (ContextCompat.checkSelfPermission(
+                this, Manifest.permission.INTERNET)== PackageManager.PERMISSION_GRANTED){
+            // 許可されている時の処理
+        }else{
+            //許可されていない時の処理
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.INTERNET)) {
+                //拒否された時 Permissionが必要な理由を表示して再度許可を求めたり、機能を無効にしたりします。
+            } else {
+                //まだ許可を求める前の時、許可を求めるダイアログを表示します。
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET}, 0);
+            }
+        }
+
 
         findViewById(R.id.lookButton).setOnClickListener(new View.OnClickListener() {
 
@@ -101,30 +172,28 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
-        findViewById(R.id.register).setOnClickListener(new View.OnClickListener(){
 
-            @Override
-            public void onClick(View view) {
-                final String phoneNumber = phoneView.getText().toString();
-                if (TextUtils.isEmpty(phoneNumber)) {
-                    return;
-                }
-                final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("tel");
-                final String key = reference.push().getKey();
-                final TelephoneNumber telephoneNumber = new TelephoneNumber();
-                telephoneNumber.telNum = phoneNumber;
-                final Map<String, Object> map = telephoneNumber.toMap();
-                reference.child(key).updateChildren(map);
-                phoneView.setText("");
-                Toast.makeText(MainActivity.this, "登録しました", Toast.LENGTH_SHORT).show();
 
-            }
-        });
+    }
+
+
+
+    // 画面タップ時の処理
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        // キーボードを隠す
+        inputMethodManager.hideSoftInputFromWindow(relativeLayout.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        // 背景にフォーカスを移す
+        relativeLayout.requestFocus();
+        return true;
+
     }
 
     private void onCookingNotStarted(@SuppressWarnings("unused") FirebaseTimer timer) {
         timerView.setText(R.string.waiting_cooking);
     }
+
 
     private void onCookingStarted(FirebaseTimer timer) {
         final DateFormat format = new Iso8601ExtendedOffsetDateTimeFormat();
