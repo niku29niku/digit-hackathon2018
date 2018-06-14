@@ -35,7 +35,7 @@
             android:gravity="center"
             android:text="残り時間"
             android:textColor="@android:color/white"
-            android:textSize="50sp" />
+            android:textSize="40sp" />
 
         <TextView
             android:id="@+id/timer"
