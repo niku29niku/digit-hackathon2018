@@ -37,10 +37,10 @@ public class PostAdapter extends ArrayAdapter<Post> {
             if (convertView != null) {
                 viewHolder = (ViewHolder) convertView.getTag();
             } else {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.listview_item_post, parent, false);
+                convertView = LayoutInflater.from(getContext()).inflate(com.developer.yoshi1125hisa.roastbeefapp.R.layout.listview_item_post, parent, false);
 
                 viewHolder = new ViewHolder();
-              viewHolder.telNumText = convertView.findViewById(R.id.telNum);
+              viewHolder.telNumText = convertView.findViewById(com.developer.yoshi1125hisa.roastbeefapp.R.id.telNum);
               convertView.setTag(viewHolder);
             }
 

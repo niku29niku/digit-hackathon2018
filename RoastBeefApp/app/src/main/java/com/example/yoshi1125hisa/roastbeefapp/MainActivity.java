@@ -5,11 +5,9 @@ import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -17,8 +15,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -40,7 +36,6 @@ import com.muddzdev.styleabletoastlibrary.StyleableToast;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -76,12 +71,12 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        timerView = findViewById(R.id.timer);
-        phoneView = findViewById(R.id.telNumText);
+        setContentView(com.developer.yoshi1125hisa.roastbeefapp.R.layout.activity_main);
+        timerView = findViewById(com.developer.yoshi1125hisa.roastbeefapp.R.id.timer);
+        phoneView = findViewById(com.developer.yoshi1125hisa.roastbeefapp.R.id.telNumText);
 
         inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        relativeLayout = findViewById(R.id.relativeLayout);
+        relativeLayout = findViewById(com.developer.yoshi1125hisa.roastbeefapp.R.id.relativeLayout);
 
         final Context context = getApplicationContext();
         final NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -137,7 +132,7 @@ public class MainActivity extends AppCompatActivity{
                     final Map<String, Object> map = telephoneNumber.toMap();
                     reference.child(key).updateChildren(map);
                     phoneView.getEditableText().clear();
-                    StyleableToast.makeText(context, "登録しました。", Toast.LENGTH_SHORT, R.style.mytoast).show();
+                    StyleableToast.makeText(context, "登録しました。", Toast.LENGTH_SHORT, com.developer.yoshi1125hisa.roastbeefapp.R.style.mytoast).show();
 
 
                 }
@@ -162,7 +157,7 @@ public class MainActivity extends AppCompatActivity{
         }
 
 
-        findViewById(R.id.lookButton).setOnClickListener(new View.OnClickListener() {
+        findViewById(com.developer.yoshi1125hisa.roastbeefapp.R.id.lookButton).setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
@@ -190,7 +185,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void onCookingNotStarted(@SuppressWarnings("unused") FirebaseTimer timer) {
-        timerView.setText(R.string.waiting_cooking);
+        timerView.setText(com.developer.yoshi1125hisa.roastbeefapp.R.string.waiting_cooking);
     }
 
 
@@ -229,7 +224,7 @@ public class MainActivity extends AppCompatActivity{
             final Notification notification = new NotificationCompat.Builder(MainActivity.this, channelId)
                     .setContentTitle("ローストビーフ")
                     .setContentText("お肉ができました！！")
-                    .setSmallIcon(R.mipmap.ic_launcher_round)
+                    .setSmallIcon(com.developer.yoshi1125hisa.roastbeefapp.R.mipmap.ic_launcher_round)
                     .build();
             manager.notify(1, notification);
         }

@@ -3,15 +3,11 @@ package com.example.yoshi1125hisa.roastbeefapp;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.TextViewCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
@@ -19,11 +15,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.IgnoreExtraProperties;
 import com.muddzdev.styleabletoastlibrary.StyleableToast;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class TelListActivity extends AppCompatActivity {
 
@@ -31,9 +25,9 @@ public class TelListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tel_list);
-        final ListView listView = findViewById(R.id.listView);
-        final View emptyView = findViewById(R.id.empty);
+        setContentView(com.developer.yoshi1125hisa.roastbeefapp.R.layout.activity_tel_list);
+        final ListView listView = findViewById(com.developer.yoshi1125hisa.roastbeefapp.R.id.listView);
+        final View emptyView = findViewById(com.developer.yoshi1125hisa.roastbeefapp.R.id.empty);
         listView.setEmptyView(emptyView);
         final DatabaseReference sendsRef = FirebaseDatabase.getInstance().getReference("tel");
 
@@ -87,7 +81,7 @@ public class TelListActivity extends AppCompatActivity {
                     number.key = dataSnapshot.getKey();
                 }
                 telArrayAdapter.remove(number);
-                StyleableToast.makeText(context, "削除しました。", Toast.LENGTH_SHORT, R.style.mytoast).show();
+                StyleableToast.makeText(context, "削除しました。", Toast.LENGTH_SHORT, com.developer.yoshi1125hisa.roastbeefapp.R.style.mytoast).show();
             }
 
             @Override
@@ -97,7 +91,7 @@ public class TelListActivity extends AppCompatActivity {
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                StyleableToast.makeText(context, "エラーが発生しました。", Toast.LENGTH_SHORT, R.style.mytoast).show();
+                StyleableToast.makeText(context, "エラーが発生しました。", Toast.LENGTH_SHORT, com.developer.yoshi1125hisa.roastbeefapp.R.style.mytoast).show();
                 // Error
             }
         });

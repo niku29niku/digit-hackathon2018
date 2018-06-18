@@ -44,6 +44,7 @@
 
             android:layout_margin="15dp"
             android:gravity="center"
+            android:text="調理開始待ち"
             android:textColor="@android:color/white"
             android:textSize="50sp" />
 
