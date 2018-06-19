@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "451175163287",
+    "firebase_url": "https://roastbeef-2cdad.firebaseio.com",
+    "project_id": "roastbeef-2cdad",
+    "storage_bucket": "roastbeef-2cdad.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:451175163287:android:c76caafdf17f00ed",
+        "android_client_info": {
+          "package_name": "com.developer.yoshi1125hisa.roastbeef"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "451175163287-7abh368ivfro0s29qbvdc833lbsqkr5d.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "451175163287-7abh368ivfro0s29qbvdc833lbsqkr5d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhJyl6ezOOpExtDKijY4aZdAVc8ZCswlc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
